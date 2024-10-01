@@ -74,11 +74,19 @@ class motion_executioner(Node):
 
     def imu_callback(self, imu_msg: Imu):
         timestamp = Time.from_msg(imu_msg.header.stamp).nanoseconds
-        imu_x_pos = imu_msg.orientation.x
-        imu_y_pos = imu_msg.orientation.y
-        imu_z_pos = imu_msg.orientation.z
-        imu_w_pos = imu_msg.orientation.w
-        ...    # log imu msgs
+        imu_pos_x = imu_msg.orientation.x
+        imu_pos_y = imu_msg.orientation.y
+        imu_pos_z = imu_msg.orientation.z
+
+        imu_av_x = imu_msg.angular_velocity.x
+        imu_av_y = imu_msg.angular_velocity.y
+        imu_av_z = imu_msg.angular_velocity.z
+
+        imu_lacc_x = imu_msg.linear_acceleration.x 
+        imu_lacc_y = imu_msg.linear_acceleration.y
+        imu_lacc_z = imu_msg.linear_acceleration.z
+        
+        Logger.log_values([imu_pos_x, imu_pos_y, imu_pos_z, imu_av_x, imu_av_y, imu_av_z, imu_lacc_x, imu_lacc_y, imu_lacc_z])
         
     def odom_callback(self, odom_msg: Odometry):
         timestamp = Time.from_msg(odom_msg.header.stamp).nanoseconds
