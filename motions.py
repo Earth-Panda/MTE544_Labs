@@ -10,10 +10,10 @@ from rclpy.qos import QoSProfile
     # For sending velocity commands to the robot: Twist
     # For the sensors: Imu, LaserScan, and Odometry
 # Check the online documentation to fill in the lines below
-from ... import Twist
+from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Imu
-from ... import LaserScan
-from ... import Odometry
+from sensor_msgs.msg import LaserScan
+from nav_msgs.msg import Odometry
 
 from rclpy.time import Time
 
@@ -40,7 +40,7 @@ class motion_executioner(Node):
         self.laser_initialized=False
         
         # TODO Part 3: Create a publisher to send velocity commands by setting the proper parameters in (...)
-        self.vel_publisher=self.create_publisher(...)
+        self.vel_publisher=self.create_publisher(Twist,'/cmd_vel',10)
                 
         # loggers
         self.imu_logger=Logger('imu_content_'+str(motion_types[motion_type])+'.csv', headers=["acc_x", "acc_y", "angular_z", "stamp"])
@@ -48,20 +48,20 @@ class motion_executioner(Node):
         self.laser_logger=Logger('laser_content_'+str(motion_types[motion_type])+'.csv', headers=["ranges", "angle_increment", "stamp"])
         
         # TODO Part 3: Create the QoS profile by setting the proper parameters in (...)
-        qos=QoSProfile(...)
+        qos=QoSProfile(reliability=2, durability=2, history=1, depth=10)
 
         # TODO Part 5: Create below the subscription to the topics corresponding to the respective sensors
         # IMU subscription
         
-        ...
+        self.subscription=self.create_subscription(Imu, "/imu", self.sub_callback,10)
         
         # ENCODER subscription
 
-        ...
+        self.subscription=self.create_subscription(Odometry, "/odom", self.sub_callback,10)
         
         # LaserScan subscription 
         
-        ...
+        self.subscription=self.create_subscription(LaserScan, "/laser", self.sub_callback,10)
         
         self.create_timer(0.1, self.timer_callback)
 
@@ -73,14 +73,29 @@ class motion_executioner(Node):
     # You can save the needed fields into a list, and pass the list to the log_values function in utilities.py
 
     def imu_callback(self, imu_msg: Imu):
+        timestamp = Time.from_msg(imu_msg.header.stamp).nanoseconds
+        imu_x_pos = imu_msg.orientation.x
+        imu_y_pos = imu_msg.orientation.y
+        imu_z_pos = imu_msg.orientation.z
+        imu_w_pos = imu_msg.orientation.w
         ...    # log imu msgs
         
     def odom_callback(self, odom_msg: Odometry):
-        
+        timestamp = Time.from_msg(odom_msg.header.stamp).nanoseconds
+        odom_orientation = odom_msg.pose.pose.orientation
+        odom_x_pos = odom_msg.pose.pose.position.x
+        odom_y_pos = odom_msg.pose.pose.position.y
+        odom_z_pos = odom_msg.pose.pose.position.z
+        odom_linear_vel = odom_msg.twist.twist.linear.x
+        odom_angular_vel = odom_msg.twist.twist.angular.x
         ... # log odom msgs
                 
     def laser_callback(self, laser_msg: LaserScan):
-        
+        timestamp = Time.from_msg(laser_msg.header.stamp).nanoseconds
+        laser_angle_min = laser_msg.angle_min
+        laser_angle_max = laser_msg.angle_max
+        laser_range_min = laser_msg.range_min
+        laser_range_max = laser_msg.range_max
         ... # log laser msgs with position msg at that time
                 
     def timer_callback(self):
@@ -114,16 +129,25 @@ class motion_executioner(Node):
     def make_circular_twist(self):
         
         msg=Twist()
+        msg.linear.x = 0.2
+        msg.angular.z = 0.5
         ... # fill up the twist msg for circular motion
         return msg
 
     def make_spiral_twist(self):
         msg=Twist()
+
+        msg.linear.x = 0.2
+        msg.angular.z = 0.5
+        for i in range(30):
+            msg.linear.x = msg.linear.x + 0.01
         ... # fill up the twist msg for spiral motion
         return msg
     
     def make_acc_line_twist(self):
         msg=Twist()
+        msg.linear.x = 0.2
+        msg.angular.z = 0
         ... # fill up the twist msg for line motion
         return msg
 
