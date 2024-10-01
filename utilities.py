@@ -25,8 +25,7 @@ class Logger:
 
             # TODO Part 5: Write the values from the list to the file
             for value in values_list:
-                file.write(value+"\n")
-            ...
+                file.write(value+", ")
             
             vals_str+="\n"
             
