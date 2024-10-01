@@ -74,6 +74,7 @@ class motion_executioner(Node):
 
     def imu_callback(self, imu_msg: Imu):
         timestamp = Time.from_msg(imu_msg.header.stamp).nanoseconds
+        
         imu_pos_x = imu_msg.orientation.x
         imu_pos_y = imu_msg.orientation.y
         imu_pos_z = imu_msg.orientation.z
@@ -86,7 +87,7 @@ class motion_executioner(Node):
         imu_lacc_y = imu_msg.linear_acceleration.y
         imu_lacc_z = imu_msg.linear_acceleration.z
         
-        Logger.log_values([imu_pos_x, imu_pos_y, imu_pos_z, imu_av_x, imu_av_y, imu_av_z, imu_lacc_x, imu_lacc_y, imu_lacc_z])
+        Logger.log_values([timestamp, imu_pos_x, imu_pos_y, imu_pos_z, imu_av_x, imu_av_y, imu_av_z, imu_lacc_x, imu_lacc_y, imu_lacc_z])
         
     def odom_callback(self, odom_msg: Odometry):
         timestamp = Time.from_msg(odom_msg.header.stamp).nanoseconds
@@ -96,15 +97,18 @@ class motion_executioner(Node):
         odom_z_pos = odom_msg.pose.pose.position.z
         odom_linear_vel = odom_msg.twist.twist.linear.x
         odom_angular_vel = odom_msg.twist.twist.angular.x
-        ... # log odom msgs
+        
+        Logger.log_values([timestamp, odom_orientation, odom_x_pos, odom_y_pos, odom_z_pos, odom_linear_vel, odom_angular_vel])
                 
     def laser_callback(self, laser_msg: LaserScan):
         timestamp = Time.from_msg(laser_msg.header.stamp).nanoseconds
+        
         laser_angle_min = laser_msg.angle_min
         laser_angle_max = laser_msg.angle_max
         laser_range_min = laser_msg.range_min
         laser_range_max = laser_msg.range_max
-        ... # log laser msgs with position msg at that time
+        
+        Logger.log_values([timestamp, laser_angle_min, laser_angle_max, laser_range_min, laser_range_max])
                 
     def timer_callback(self):
         
