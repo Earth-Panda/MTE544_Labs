@@ -17,7 +17,7 @@ class Logger:
             
             file.write(header_str)
 
-
+    # writes a row of data to file
     def log_values(self, values_list):
 
         with open(self.filename, 'a') as file:
@@ -25,7 +25,7 @@ class Logger:
 
             # TODO Part 5: Write the values from the list to the file
             for value in values_list:
-                file.write(value+", ")
+                file.write(str(value)+", ")
             
             vals_str+="\n"
             
@@ -95,13 +95,12 @@ def euler_from_quaternion(quat):
     #pitch (rotation about y-axis)
     sin_p = sqrt(1 + 2 * (quat.w * quat.y - quat.x * quat.z))
     cos_p = sqrt(1 - 2 * (quat.w * quat.y - quat.x * quat.z))
-    pitch = 2 * atan2(sin_p, cos_p) - math.pi / 2
+    pitch = 2 * atan2(sin_p, cos_p) - M_PI / 2
 
     #yaw (rotation about z-axis)
     sin_y = 2 * (quat.w * quat.z + quat.x * quat.y)
     cos_y = 1 - 2 * (quat.y * quat.y + quat.z * quat.z)
     yaw = atan2(sin_y, cos_y)
-
 
     return yaw
 
