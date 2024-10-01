@@ -23,6 +23,8 @@ from rclpy.time import Time
 
 CIRCLE=0; SPIRAL=1; ACC_LINE=2
 motion_types=['circle', 'spiral', 'line']
+offset = 0
+SPIRAL_INCREMENT = 0.01
 
 class motion_executioner(Node):
     
@@ -143,24 +145,23 @@ class motion_executioner(Node):
         msg=Twist()
         msg.linear.x = 0.2
         msg.angular.z = 0.5
-        ... # fill up the twist msg for circular motion
+        # fill up the twist msg for circular motion
         return msg
 
     def make_spiral_twist(self):
         msg=Twist()
 
-        msg.linear.x = 0.2
+        msg.linear.x = 0.2 + offset
         msg.angular.z = 0.5
-        for i in range(30):
-            msg.linear.x = msg.linear.x + 0.01
-        ... # fill up the twist msg for spiral motion
+        offset += SPIRAL_INCREMENT
+        # fill up the twist msg for spiral motion
         return msg
     
     def make_acc_line_twist(self):
         msg=Twist()
         msg.linear.x = 0.2
         msg.angular.z = 0
-        ... # fill up the twist msg for line motion
+        # fill up the twist msg for line motion
         return msg
 
 import argparse
