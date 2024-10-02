@@ -24,6 +24,7 @@ from rclpy.time import Time
 CIRCLE=0; SPIRAL=1; ACC_LINE=2
 motion_types=['circle', 'spiral', 'line']
 SPIRAL_INCREMENT = 0.001
+SPIRAL_MAX = 3
 
 class motion_executioner(Node):
     
@@ -159,7 +160,7 @@ class motion_executioner(Node):
 
     def make_spiral_twist(self):
         msg=Twist()
-        msg.linear.x = 0.2 + self.offset
+        msg.linear.x = max(0.2 + self.offset, SPIRAL_MAX)
         msg.angular.z = -0.5
         self.offset += SPIRAL_INCREMENT
         # fill up the twist msg for spiral motion
