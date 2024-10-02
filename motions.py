@@ -23,8 +23,7 @@ from rclpy.time import Time
 
 CIRCLE=0; SPIRAL=1; ACC_LINE=2
 motion_types=['circle', 'spiral', 'line']
-SPIRAL_INCREMENT = 0.001
-SPIRAL_MAX = 3
+SPIRAL_INCREMENT = 1.0001
 
 class motion_executioner(Node):
     
@@ -36,7 +35,7 @@ class motion_executioner(Node):
         
         self.radius_=0.0
 
-        self.offset = 0
+        self.offset = -0.5
         
         self.successful_init=False
         # may need to set back to false during actual robot
@@ -50,8 +49,8 @@ class motion_executioner(Node):
         # loggers
         self.imu_logger=Logger('imu_content_'+str(motion_types[motion_type])+'.csv', headers=["acc_x", "acc_y", "angular_z", "stamp"])
         self.odom_logger=Logger('odom_content_'+str(motion_types[motion_type])+'.csv', headers=["x","y","th", "stamp"])
-        self.laser_logger=Logger('laser_content_'+str(motion_types[motion_type])+'.csv', headers=["ranges", "angle_increment", "stamp"])
-        
+        self.laser_logger=Logger('laser_content_'+str(motion_types[motion_type])+'.csv', headers=["angle_increment", "stamp"])
+        self.laser_logger=Logger('laser_ranges_'+str(motion_types[motion_type])+'.csv', headers=["ranges", "stamp"])
         # TODO Part 3: Create the QoS profile by setting the proper parameters in (...)
         qos=QoSProfile(reliability=2, durability=2, history=1, depth=10)
         # matched qos profile of command: ros2 topic info /odom (or /imu or /scan) --verbose
@@ -119,7 +118,8 @@ class motion_executioner(Node):
         # question: should we be sending an array as a logged element? ranges is a float32[], but this is what is asked as per the headers above
         laser_ang_inc = laser_msg.angle_increment
         
-        self.laser_logger.log_values([laser_ranges, laser_ang_inc, timestamp])
+        self.laser_logger.log_values([laser_ang_inc, timestamp])
+        self.laser_logger.log_values(laser_ranges.append(timestamp))
         #print("logged laser data")
                 
     def timer_callback(self):
@@ -160,9 +160,9 @@ class motion_executioner(Node):
 
     def make_spiral_twist(self):
         msg=Twist()
-        msg.linear.x = max(0.2 + self.offset, SPIRAL_MAX)
-        msg.angular.z = -0.5
-        self.offset += SPIRAL_INCREMENT
+        msg.linear.x = 0.2 
+        msg.angular.z = -0.5 * self.offset
+        self.offset /= SPIRAL_INCREMENT
         # fill up the twist msg for spiral motion
         return msg
     
