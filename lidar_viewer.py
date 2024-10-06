@@ -38,12 +38,18 @@ def extractLidarData(laser_ranges_file, laser_content_file):
     return cartesianPointsTable
 
 def main():
+    #show first revolution of lidar points
     lidarPoints = extractLidarData("Lab1_results/csvs/laser_content_circle_ranges.csv", "Lab1_results/csvs/laser_content_circle.csv")
     x, y = zip(*lidarPoints[0])
     plt.scatter(x, y, c="green")
     plt.title("Laser Scan Data for One Revolution")
     plt.xlabel("x[m]")
     plt.ylabel("y[m]")
+    plt.show()
+
+    #show slam map
+    map = plt.imread("Lab1_results/map.pgm")
+    plt.imshow(map)
     plt.show()
     
 if __name__ == "__main__":
