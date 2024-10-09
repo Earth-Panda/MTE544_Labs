@@ -5,7 +5,7 @@
 import matplotlib.pyplot as plt
 from utilities import FileReader
 
-def plot_errors(filename):
+def plot_imu(filename, type):
     
     headers, values=FileReader(filename).read_file() 
     time_list=[]
@@ -14,15 +14,55 @@ def plot_errors(filename):
     for val in values:
         time_list.append(val[-1] - first_stamp)
 
+    plt.suptitle("IMU data for " + type)
+    plt.subplot(1, 2, 1)
     for i in range(0, len(headers) - 1):
-        plt.plot(time_list, [lin[i] for lin in values], label= headers[i]+ " linear")
+        if(i < len(headers) - 2):
+            plt.plot(time_list, [lin[i] for lin in values], label= headers[i]+ " linear")
+            plt.xlabel("time (s)")
+            plt.ylabel("acceleration (m/s^2)")
+            plt.legend()
+        else:
+            plt.subplot(1, 2, 2)
+            plt.plot(time_list, [lin[i] for lin in values], label= headers[i]+ " linear")
+            plt.xlabel("time (s)")
+            plt.ylabel("angular velocity (rad/s)")
+            plt.legend()
     
-    #plt.plot([lin[0] for lin in values], [lin[1] for lin in values])
-    plt.legend()
     plt.grid()
     plt.show()
+
+def plot_odom(filename, type):
     
+    headers, values=FileReader(filename).read_file() 
+    time_list=[]
+    first_stamp=values[0][-1]
+    
+    for val in values:
+        time_list.append(val[-1] - first_stamp)
+
+    plt.suptitle("Odom data for " + type)
+    plt.subplot(1, 2, 1)
+    for i in range(0, len(headers) - 1):
+        if(i < len(headers) - 2):
+
+            plt.plot(time_list, [lin[i] for lin in values], label= headers[i]+ " linear")
+            plt.xlabel("time (s)")
+            plt.ylabel("position (m)")
+            plt.legend()
+        else:
+            plt.subplot(1, 2, 2)
+            plt.plot(time_list, [lin[i] for lin in values], label= headers[i]+ " linear")
+            plt.xlabel("time (s)")
+            plt.ylabel("angle (rad)")
+            plt.legend()
+    
+    plt.grid()
+    plt.show()
+
 import argparse
+
+types = ["Spiral", "Line", "Circle"]
 
 if __name__=="__main__":
 
@@ -34,5 +74,5 @@ if __name__=="__main__":
     print("plotting the files", args.files)
 
     filenames=args.files
-    for filename in filenames:
-        plot_errors(filename)
+    for i, filename in enumerate(filenames):
+        plot_odom(filename, types[i])
