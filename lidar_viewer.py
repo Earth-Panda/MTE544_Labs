@@ -50,6 +50,7 @@ def main():
     #show slam map
     map = plt.imread("Lab1_results/map.pgm")
     plt.imshow(map)
+    plt.title("SLAM Top Down View of Lab Room")
     plt.show()
     
 if __name__ == "__main__":
