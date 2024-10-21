@@ -89,8 +89,20 @@ def euler_from_quaternion(quat):
     Convert quaternion (w in last place) to euler roll, pitch, yaw.
     quat = [x, y, z, w]
     """
+    #roll (rotation about x-axis)
+    sin_r = 2 * (quat.w * quat.x + quat.y * quat.z)
+    cos_r = 1 - 2 * (quat.x * quat.x + quat.y * quat.y)
+    roll = atan2(sin_r, cos_r)
 
-    # just unpack yaw
+    #pitch (rotation about y-axis)
+    sin_p = sqrt(1 + 2 * (quat.w * quat.y - quat.x * quat.z))
+    cos_p = sqrt(1 - 2 * (quat.w * quat.y - quat.x * quat.z))
+    pitch = 2 * atan2(sin_p, cos_p) - M_PI / 2
+
+    #yaw (rotation about z-axis)
+    sin_y = 2 * (quat.w * quat.z + quat.x * quat.y)
+    cos_y = 1 - 2 * (quat.y * quat.y + quat.z * quat.z)
+    yaw = atan2(sin_y, cos_y)
     return yaw
 
 
@@ -100,7 +112,9 @@ def calculate_linear_error(current_pose, goal_pose):
     # Compute the linear error in x and y
     # Remember that current_pose = [x,y, theta, time stamp] and goal_pose = [x,y]
     # Remember to use the Euclidean distance to calculate the error.
-    error_linear= ...
+    deltaY = goal_pose[1] - current_pose[1]
+    deltaX = goal_pose[0] - current_pose[0]
+    error_linear = sqrt(deltaX**2 + deltaY**2)
 
     return error_linear
 
@@ -111,11 +125,15 @@ def calculate_angular_error(current_pose, goal_pose):
     # Remember that current_pose = [x,y, theta, time stamp] and goal_pose = [x,y]
     # Use atan2 to find the desired orientation
     # Remember that this function returns the difference in orientation between where the robot currently faces and where it should face to reach the goal
+    deltaY = goal_pose[1] - current_pose[1]
+    deltaX = goal_pose[0] - current_pose[0]
+    #print(f"atan2 {atan2(deltaY, deltaX)}")
+    error_angular = atan2(deltaY, deltaX)-current_pose[2]
 
-    error_angular = ...
-
-    # Remember to handle the cases where the angular error might exceed the range [-π, π]
-
-    ...
+    # Remember to handle the cases where the angular error might exceed the range [-π, π] - when might this occur?? doesnt atan2 always return angle between -pi and pi
+    if error_angular > M_PI :
+        error_angular = error_angular - ((error_angular+M_PI)//(2*M_PI))*2*M_PI
+    elif error_angular < -M_PI:
+        error_angular = error_angular + ((abs(error_angular)+M_PI)//(2*M_PI))*2*M_PI
     
     return error_angular

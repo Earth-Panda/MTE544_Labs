@@ -8,6 +8,11 @@ M_PI=3.1415926535
 
 P=0; PD=1; PI=2; PID=3
 
+MAX_TRANS_VEL_SIM = 0.22
+MAX_ROT_VEL_SIM = 2.84
+MAX_TRANS_VEL_REAL = 0.31 
+MAX_ROT_VEL_REAL = 1.9
+
 class controller:
     
     
@@ -24,14 +29,26 @@ class controller:
         e_lin=calculate_linear_error(pose, goal)
         e_ang=calculate_angular_error(pose, goal)
 
-
+        print(f"lin error: {e_lin}")
+        print(f"ang error: {e_ang}")
         linear_vel=self.PID_linear.update([e_lin, pose[3]], status)
         angular_vel=self.PID_angular.update([e_ang, pose[3]], status)
-        
         # TODO Part 4: Add saturation limits for the robot linear and angular velocity
 
-        linear_vel = ... if linear_vel > 1.0 else linear_vel
-        angular_vel= ... if angular_vel > 1.0 else angular_vel
+        #Qs: why were the limits in the if condn set to 1? shouldnt they be the max allowable value?
+        #also shouldnt be account for negative values?
+        if linear_vel > MAX_TRANS_VEL_SIM:
+            linear_vel = MAX_TRANS_VEL_SIM
+        elif linear_vel < -MAX_TRANS_VEL_SIM:
+            linear_vel = -MAX_TRANS_VEL_SIM
+
+        if angular_vel > MAX_ROT_VEL_SIM:
+            angular_vel = MAX_ROT_VEL_SIM
+        elif angular_vel < -MAX_ROT_VEL_SIM:
+            angular_vel = -MAX_ROT_VEL_SIM
+
+        #linear_vel =  MAX_TRANS_VEL_SIM if linear_vel > 1.0 else linear_vel
+        #angular_vel = MAX_ROT_VEL_SIM if angular_vel > 1.0 else angular_vel
         
         return linear_vel, angular_vel
     
