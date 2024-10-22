@@ -21,7 +21,10 @@ from controller import controller, trajectoryController
 # You may add any other imports you may need/want to use below
 # import ...
 
-GOAL_THRESH_METRES = 0.01 # 10cm, can change if needed
+##MAKE SURE TO RESET ODOM FRAME EACH RUN!!!
+
+GOAL_THRESH_METRES = 0.01 # 1cm, can change if needed
+#relax thresh if jittering too much near goal
 
 class decision_maker(Node):
     
@@ -38,12 +41,13 @@ class decision_maker(Node):
         # TODO Part 5: Tune your parameters here
     
         if motion_type == POINT_PLANNER:
+            #P is good
             self.controller=controller(klp=1.2, klv=0.5, kap=0.8, kav=0.6)
             self.planner=planner(POINT_PLANNER)    
     
     
         elif motion_type==TRAJECTORY_PLANNER:
-            self.controller=trajectoryController(klp=0.2, klv=0.5, kap=0.8, kav=0.6)
+            self.controller=trajectoryController(klp=1.2, klv=0.5, kap=0.8, kav=0.6)
             self.planner=planner(TRAJECTORY_PLANNER)
 
         else:
@@ -74,16 +78,17 @@ class decision_maker(Node):
 
         curr_pose = self.localizer.getPose()
         print(f"curr pose -> x: {curr_pose[0]}, y: {curr_pose[1]}, theta: {curr_pose[2]}")
-        print(f"goal pose -> x: {self.goal[0]}, y: {self.goal[1]}")
         
         # TODO Part 3: Check if you reached the goal
         if type(self.goal) == list:
             #this is for traj - bc traj is list - so therefore check if we are at last point in traj
+            print(f"goal: {self.goal[-1][0]}, {self.goal[-1][1]}")
             reached_goal = calculate_linear_error(self.localizer.getPose(), self.goal[-1]) < GOAL_THRESH_METRES
         else: 
+            print(f"goal pose -> x: {self.goal[0]}, y: {self.goal[1]}")
             #dont need to consider angular error bc we are not controlling it (i.e. it is not in goal pose)
             reached_goal = calculate_linear_error(self.localizer.getPose(), self.goal) < GOAL_THRESH_METRES
-            print(f"reached goal? {reached_goal}")
+            #print(f"reached goal? {reached_goal}")
         
 
         if reached_goal:
@@ -121,7 +126,7 @@ def main(args=None):
     #for simultion, run ros2 topic info /odom --verbose to see configs
     
     #change goal point in lab
-    goalPoint = [0.0, -3.0]
+    goalPoint = [-3.0, -1.5]
     # TODO Part 4: instantiate the decision_maker with the proper parameters for moving the robot
     #Qs: what is decision maker params? - I assume twist - but when why odom_qos passed in - its ok bc at least for sim, they have same qos - but then why we call if odom_qos, why not vel_qos
     if args.motion.lower() == "point":

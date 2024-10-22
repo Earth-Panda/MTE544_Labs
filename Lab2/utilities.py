@@ -130,7 +130,7 @@ def calculate_angular_error(current_pose, goal_pose):
     #print(f"atan2 {atan2(deltaY, deltaX)}")
     error_angular = atan2(deltaY, deltaX)-current_pose[2]
 
-    # Remember to handle the cases where the angular error might exceed the range [-π, π] - when might this occur?? doesnt atan2 always return angle between -pi and pi
+    # Remember to handle the cases where the angular error might exceed the range [-π, π] - Qs: when might this occur?? doesnt atan2 always return angle between -pi and pi
     if error_angular > M_PI :
         error_angular = error_angular - ((error_angular+M_PI)//(2*M_PI))*2*M_PI
     elif error_angular < -M_PI:

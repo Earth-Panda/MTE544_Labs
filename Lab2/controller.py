@@ -8,8 +8,8 @@ M_PI=3.1415926535
 
 P=0; PD=1; PI=2; PID=3
 
-MAX_TRANS_VEL_SIM = 0.22
-MAX_ROT_VEL_SIM = 2.84
+MAX_TRANS_VEL_SIM = 0.31#0.22
+MAX_ROT_VEL_SIM = 1.9#2.84
 MAX_TRANS_VEL_REAL = 0.31 
 MAX_ROT_VEL_REAL = 1.9
 
@@ -19,7 +19,7 @@ class controller:
     # Default gains of the controller for linear and angular motions
     def __init__(self, klp=0.2, klv=0.2, kli=0.2, kap=0.2, kav=0.2, kai=0.2):
         
-        # TODO Part 5 and 6: Modify the below lines to test your PD, PI, and PID controller
+        # TODO Part 5 and 6: Modify the below lines to test your PD, PI, and PID controller - modify first arguement to change control type - tune params in decisions.py
         self.PID_linear=PID_ctrl(P, klp, klv, kli, filename_="linear.csv")
         self.PID_angular=PID_ctrl(P, kap, kav, kai, filename_="angular.csv")
 
@@ -74,8 +74,19 @@ class trajectoryController(controller):
 
         # TODO Part 5: Add saturation limits for the robot linear and angular velocity
 
-        linear_vel = ... if linear_vel > ... else linear_vel
-        angular_vel= ... if angular_vel > ... else angular_vel
+        #linear_vel = ... if linear_vel > ... else linear_vel
+        #angular_vel= ... if angular_vel > ... else angular_vel
+
+        #Qs: also account for negative like in point path
+        if linear_vel > MAX_TRANS_VEL_SIM:
+            linear_vel = MAX_TRANS_VEL_SIM
+        elif linear_vel < -MAX_TRANS_VEL_SIM:
+            linear_vel = -MAX_TRANS_VEL_SIM
+
+        if angular_vel > MAX_ROT_VEL_SIM:
+            angular_vel = MAX_ROT_VEL_SIM
+        elif angular_vel < -MAX_ROT_VEL_SIM:
+            angular_vel = -MAX_ROT_VEL_SIM
         
         return linear_vel, angular_vel
 
