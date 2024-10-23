@@ -42,12 +42,12 @@ class decision_maker(Node):
     
         if motion_type == POINT_PLANNER:
             #P is good
-            self.controller=controller(klp=1.2, klv=0.5, kap=0.8, kav=0.6)
+            self.controller=controller(klp=1.2, klv=0.3, kli=0.05, kap=1.2, kav=0.5, kai=0.6)
             self.planner=planner(POINT_PLANNER)    
     
     
         elif motion_type==TRAJECTORY_PLANNER:
-            self.controller=trajectoryController(klp=1.2, klv=0.5, kap=0.8, kav=0.6)
+            self.controller=trajectoryController(klp=1.2, klv=0.3, kli=0.2, kap=1.2, kav=0.35, kai=0.2)
             self.planner=planner(TRAJECTORY_PLANNER)
 
         else:
@@ -126,13 +126,13 @@ def main(args=None):
     #for simultion, run ros2 topic info /odom --verbose to see configs
     
     #change goal point in lab
-    goalPoint = [-3.0, -1.5]
+    goalPoint = [-1.0, -1.0]
     # TODO Part 4: instantiate the decision_maker with the proper parameters for moving the robot
     #Qs: what is decision maker params? - I assume twist - but when why odom_qos passed in - its ok bc at least for sim, they have same qos - but then why we call if odom_qos, why not vel_qos
     if args.motion.lower() == "point":
-        DM=decision_maker(Twist, "/cmd_vel", odom_qos, goalPoint, 10, POINT_PLANNER)
+        DM=decision_maker(Twist, "/cmd_vel", 10, goalPoint, 10, POINT_PLANNER)
     elif args.motion.lower() == "trajectory":
-        DM=decision_maker(Twist, "/cmd_vel", odom_qos, goalPoint, 10, TRAJECTORY_PLANNER)
+        DM=decision_maker(Twist, "/cmd_vel", 10, goalPoint, 10, TRAJECTORY_PLANNER)
     else:
         print("invalid motion type", file=sys.stderr)        
     

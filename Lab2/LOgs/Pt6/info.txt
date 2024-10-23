@@ -1,0 +1,3 @@
+Parabola, PD: klp=1.2, klv=0.3, kli=0.2, kap=1.2, kav=0.35, kai=0.2
+
+Sigmoid, PD: klp=1.2, klv=0.3, kli=0.2, kap=1.2, kav=0.35, kai=0.2

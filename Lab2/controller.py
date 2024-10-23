@@ -20,8 +20,8 @@ class controller:
     def __init__(self, klp=0.2, klv=0.2, kli=0.2, kap=0.2, kav=0.2, kai=0.2):
         
         # TODO Part 5 and 6: Modify the below lines to test your PD, PI, and PID controller - modify first arguement to change control type - tune params in decisions.py
-        self.PID_linear=PID_ctrl(P, klp, klv, kli, filename_="linear.csv")
-        self.PID_angular=PID_ctrl(P, kap, kav, kai, filename_="angular.csv")
+        self.PID_linear=PID_ctrl(PD, klp, klv, kli, filename_="linear.csv")
+        self.PID_angular=PID_ctrl(PD, kap, kav, kai, filename_="angular.csv")
 
     
     def vel_request(self, pose, goal, status):
@@ -37,15 +37,15 @@ class controller:
 
         #Qs: why were the limits in the if condn set to 1? shouldnt they be the max allowable value?
         #also shouldnt be account for negative values?
-        if linear_vel > MAX_TRANS_VEL_SIM:
-            linear_vel = MAX_TRANS_VEL_SIM
-        elif linear_vel < -MAX_TRANS_VEL_SIM:
-            linear_vel = -MAX_TRANS_VEL_SIM
+        if linear_vel > MAX_TRANS_VEL_REAL:
+            linear_vel = MAX_TRANS_VEL_REAL
+        elif linear_vel < -MAX_TRANS_VEL_REAL:
+            linear_vel = -MAX_TRANS_VEL_REAL
 
-        if angular_vel > MAX_ROT_VEL_SIM:
-            angular_vel = MAX_ROT_VEL_SIM
-        elif angular_vel < -MAX_ROT_VEL_SIM:
-            angular_vel = -MAX_ROT_VEL_SIM
+        if angular_vel > MAX_ROT_VEL_REAL:
+            angular_vel = MAX_ROT_VEL_REAL
+        elif angular_vel < -MAX_ROT_VEL_REAL:
+            angular_vel = -MAX_ROT_VEL_REAL
 
         #linear_vel =  MAX_TRANS_VEL_SIM if linear_vel > 1.0 else linear_vel
         #angular_vel = MAX_ROT_VEL_SIM if angular_vel > 1.0 else angular_vel
@@ -78,15 +78,15 @@ class trajectoryController(controller):
         #angular_vel= ... if angular_vel > ... else angular_vel
 
         #Qs: also account for negative like in point path
-        if linear_vel > MAX_TRANS_VEL_SIM:
-            linear_vel = MAX_TRANS_VEL_SIM
-        elif linear_vel < -MAX_TRANS_VEL_SIM:
-            linear_vel = -MAX_TRANS_VEL_SIM
+        if linear_vel > MAX_TRANS_VEL_REAL:
+            linear_vel = MAX_TRANS_VEL_REAL
+        elif linear_vel < -MAX_TRANS_VEL_REAL:
+            linear_vel = -MAX_TRANS_VEL_REAL
 
-        if angular_vel > MAX_ROT_VEL_SIM:
-            angular_vel = MAX_ROT_VEL_SIM
-        elif angular_vel < -MAX_ROT_VEL_SIM:
-            angular_vel = -MAX_ROT_VEL_SIM
+        if angular_vel > MAX_ROT_VEL_REAL:
+            angular_vel = MAX_ROT_VEL_REAL
+        elif angular_vel < -MAX_ROT_VEL_REAL:
+            angular_vel = -MAX_ROT_VEL_REAL
         
         return linear_vel, angular_vel
 

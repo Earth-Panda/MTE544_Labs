@@ -1,0 +1,6 @@
+PD: klp=1.2, klv=0.2, kli=0.2, kap=1.25, kav=0.5, kai=0.2
+
+PI: klp=1.2, klv=0.4, kli=0.05, kap=0.85, kav=0.5, kai=0.1
+
+PID: klp=1.2, klv=0.3, kli=0.05, kap=1.2, kav=0.5, kai=0.6
+
