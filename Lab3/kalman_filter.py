@@ -11,9 +11,9 @@ class kalman_filter:
     def __init__(self, P,Q,R, x, dt):
         # Q: are P, Q, R already matrices, or do I have to make then matrices by multiplying them by identity?
         # assuming P, Q, R, are scalar, therefore need to multiply them by corresponding identity matrices to get covariance matrices
-        self.P = P*np.eye(x.size) # initial prediction (prior) covariance - is nxn, n is num of states
-        self.Q = Q*np.eye(x.size) # covariance of the states (assumed constant) - is nxn
-        self.R = R*np.eye(NUM_MEASUREMENTS) # covariance of measurements (assumed constant) - is bxb, b is num of measurements
+        self.P = P # initial prediction (prior) covariance - is nxn, n is num of states
+        self.Q = Q # covariance of the states (assumed constant) - is nxn
+        self.R = R # covariance of measurements (assumed constant) - is bxb, b is num of measurements
         self.x = x # initial state
         self.dt = dt
         
