@@ -6,7 +6,7 @@ import numpy as np
 
 class Logger:
     
-    def __init__(self, filename, headers=["e", "e_dot", "e_int", "stamp"]):
+    def __init__(self, filename, headers=["imu_ax", "imu_ay", "kf_ax", "kf_ay","kf_vx","kf_w","kf_x", "kf_y","stamp"]):
         
         self.filename = filename
 

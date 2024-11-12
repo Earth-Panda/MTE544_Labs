@@ -88,7 +88,17 @@ class localization(Node):
         self.pose=np.array(xhat[0], xhat[1], xhat[2])
 
         # TODO Part 4: log your data
-        self.loc_logger.log_values(...)
+        self.loc_logger.log_values([
+            ax,
+            ay,
+            xhat[5],
+            xhat[4]*xhat[3],
+            xhat[4],
+            xhat[3],
+            xhat[0],
+            xhat[1],
+            Time.from_msg(imu_msg.header.stamp).nanoseconds
+        ])
       
     def odom_callback(self, pose_msg):
         
