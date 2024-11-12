@@ -29,7 +29,7 @@ class localization(Node):
 
         super().__init__("localizer")
 
-        elf.loc_logger=Logger( loggerName , loggerHeaders)
+        self.loc_logger=Logger( loggerName , loggerHeaders)
         self.pose=None
         
         if type==rawSensors:
@@ -46,14 +46,21 @@ class localization(Node):
     def initKalmanfilter(self, dt):
         
         # TODO Part 3: Set up the quantities for the EKF (hint: you will need the functions for the states and measurements)
-        
-        x= ...
-        
-        Q= ...
+        x_position = odom.pose.position.x
+        y_position = odom.pose.position.y
+        quaternion = odom.pose.orientation
+        theta = euler_from_quaternion(quaternion)
+        lin_vel = Twist.linear.x
+        ang_vel = Twist.angular.z
+        accel = Imu.linear_acceleration.x
 
-        R= ...
+        x= np.array([x_position, y_position, theta, lin_vel, ang_vel, accel])
         
-        P= ... # initial covariance
+        Q= np.eye(6) # do they give us process noise?
+
+        R= np.eye(4) # or measurement noise?
+        
+        P= np.eye(6) # initial covariance -- not sure about this either
         
         self.kf=kalman_filter(P,Q,R, x, dt)
         
@@ -74,7 +81,8 @@ class localization(Node):
         z=np.array([imu_msg])
         
         # Implement the two steps for estimation
-        ...
+        prediction = self.predict()
+        belief = self.update(z)
         
         # Get the estimate
         xhat=self.kf.get_states()
