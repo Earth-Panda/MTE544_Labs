@@ -8,6 +8,8 @@ def plot_errors(filename):
     
     headers, values=FileReader(filename).read_file()
     
+    g_headers, g_values=FileReader("pose_csvs/groundPose.csv").read_file()
+
     time_list=[]
     
     first_stamp=values[0][-1]
@@ -19,8 +21,11 @@ def plot_errors(filename):
     
     fig, axes = plt.subplots(2,1, figsize=(14,6))
 
-
+    # plot ground truth
+    axes[0].plot([lin[len(g_headers) - 3] for lin in g_values], [lin[len(g_headers) - 2] for lin in g_values])
+    # plot data 
     axes[0].plot([lin[len(headers) - 3] for lin in values], [lin[len(headers) - 2] for lin in values])
+
     axes[0].set_title("state space")
     axes[0].grid()
 
