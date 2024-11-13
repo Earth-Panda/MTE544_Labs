@@ -9,7 +9,6 @@ class kalman_filter:
     
     # TODO Part 3: Initialize the covariances and the states    
     def __init__(self, P,Q,R, x, dt):
-        # Q: are P, Q, R already matrices, or do I have to make then matrices by multiplying them by identity?
         # assuming P, Q, R, are scalar, therefore need to multiply them by corresponding identity matrices to get covariance matrices
         self.P = P # initial prediction (prior) covariance - is nxn, n is num of states
         self.Q = Q # covariance of the states (assumed constant) - is nxn
@@ -23,12 +22,15 @@ class kalman_filter:
         # A describes non linear motion model
         # C describes non linear mapping from state to measurement
         self.A = self.jacobian_A() # linearization of A about previous state mean
-        self.C = self.jacobian_H() #linearization of C about prediction mean
+        
 
         # Q: shouldnt C be calculated after prediction mean calculated since it needs current prediction mean (as per lec notes)?
 
         #calculates prediction mean (updates x internally)
         self.motion_model()
+        self.C = self.jacobian_H()
+        #calc jacobian_H after updating prediction mean as jacobian_H requires prediction mean of current time step
+         #linearization of C about prediction mean
         #calculates prediction covariance using jacobian of A
         self.P= np.dot( np.dot(self.A, self.P), self.A.T) + self.Q
 
