@@ -49,11 +49,11 @@ class localization(Node):
         
         x= np.array([0, 0, 0 ,0, 0, 0]) #assumed starting stationary at origin
         #tried 0.1, 0.5, 0.9 for each
-        Q= 0.05*np.eye(x.size)
+        Q= 1.0*np.eye(x.size)
 
-        R= 2*np.eye(4)
+        R= 0.5*np.eye(4)
         
-        P= 0.01*np.eye(x.size) # initial covariance - low bc when we start we are quite certain where we are (origin). Q: should it be zero?
+        P= 0.1*np.eye(x.size) # initial covariance - low bc when we start we are quite certain where we are (origin). Q: should it be zero?
         
         self.kf=kalman_filter(P,Q,R, x, dt)
         
