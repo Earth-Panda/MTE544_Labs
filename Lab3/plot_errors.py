@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from utilities import FileReader
+import numpy as np
 
 
 
@@ -8,25 +9,40 @@ def plot_errors(filename):
     
     headers, values=FileReader(filename).read_file()
     
-    g_headers, g_values=FileReader("pose_csvs/groundPose.csv").read_file()
 
     time_list=[]
     
     first_stamp=values[0][-1]
-    
+    seconds_list = []
     for val in values:
         time_list.append(val[-1] - first_stamp)
+        #seconds_list.append((val[-1] - first_stamp)*1e-9)
 
-    
+    dt = 0.1
+    v = 0
+    w = 1
+    t = 0
+    max_time = 20
+    x = [0]
+    y = [0]
+    th = [0]
+    while t < max_time:
+        v += 0.01 if v < 1.0 else 0.0
+        th.append(th[-1] + w * dt)
+        x.append(x[-1] + v*np.cos(th[-1])*dt)
+        y.append(y[-1] + v*np.sin(th[-1])*dt)
+        t += dt
     
     fig, axes = plt.subplots(2,1, figsize=(14,6))
 
     # plot ground truth
-    axes[0].plot([lin[len(g_headers) - 3] for lin in g_values], [lin[len(g_headers) - 2] for lin in g_values])
+    #axes[0].plot([lin[len(g_headers)-1] for lin in g_values], [lin[len(g_headers) - 1] for lin in g_values])
+    axes[0].plot(x, y)
     # plot data 
     axes[0].plot([lin[len(headers) - 3] for lin in values], [lin[len(headers) - 2] for lin in values])
 
     axes[0].set_title("state space")
+    axes[0].legend(["truth", "estimate"])
     axes[0].grid()
 
     

@@ -22,13 +22,13 @@ class kalman_filter:
         # A describes non linear motion model
         # C describes non linear mapping from state to measurement
         self.A = self.jacobian_A() # linearization of A about previous state mean
-        
+        self.C = self.jacobian_H()
 
         # Q: shouldnt C be calculated after prediction mean calculated since it needs current prediction mean (as per lec notes)?
 
         #calculates prediction mean (updates x internally)
         self.motion_model()
-        self.C = self.jacobian_H()
+        
         #calc jacobian_H after updating prediction mean as jacobian_H requires prediction mean of current time step
          #linearization of C about prediction mean
         #calculates prediction covariance using jacobian of A

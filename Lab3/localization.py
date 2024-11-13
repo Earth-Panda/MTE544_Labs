@@ -48,12 +48,12 @@ class localization(Node):
         # TODO Part 3: Set up the quantities for the EKF (hint: you will need the functions for the states and measurements)
         
         x= np.array([0, 0, 0 ,0, 0, 0]) #assumed starting stationary at origin
-        
-        Q= 0.5*np.eye(x.size)
+        #tried 0.1, 0.5, 0.9 for each
+        Q= 0.05*np.eye(x.size)
 
-        R= 0.5*np.eye(4)
+        R= 2*np.eye(4)
         
-        P= 0.1*np.eye(x.size) # initial covariance - low bc when we start we are quite certain where we are (origin). Q: should it be zero?
+        P= 0.01*np.eye(x.size) # initial covariance - low bc when we start we are quite certain where we are (origin). Q: should it be zero?
         
         self.kf=kalman_filter(P,Q,R, x, dt)
         
@@ -85,7 +85,7 @@ class localization(Node):
         xhat=self.kf.get_states()
 
         # Update the pose estimate to be returned by getPose
-        self.pose=np.array([xhat[0], xhat[1], xhat[2]])
+        self.pose=np.array([xhat[0], xhat[1], xhat[2], imu_msg.header.stamp])
 
         # TODO Part 4: log your data
         self.loc_logger.log_values([
