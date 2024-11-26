@@ -163,11 +163,10 @@ def search(maze, start, end):
             node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
 
             # TODO PART 4 Make sure within range (check if within maze boundary)
-            print(node_position)
-            if(node_position[0] < no_rows and node_position[0] >= 0 and node_position[1] < no_columns and node_position[1] >= 0):
-                print(":D")
+            if(node_position[0] >= no_columns and node_position[0] < 0 and node_position[1] >= no_rows and node_position[1] < 0):
                 continue
 
+            
             # Make sure walkable terrain
             if maze[node_position[0], node_position[1]] > 0.8:
                 continue
@@ -201,6 +200,7 @@ def search(maze, start, end):
 
             # Add the child to the yet_to_visit list
             yet_to_visit_dict[child.position] = child
+    print("ended without returning")
 
 def get_dist(start, end):
     method = "euclidan"
