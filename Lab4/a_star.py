@@ -64,12 +64,12 @@ def search(maze, start, end):
 
     # TODO PART 4 Create start and end node with initized values for g, h and f
     # Use None as parent if not defined
-    start_node = Node(None, None)
+    start_node = Node(None, start)
     start_node.g = 0     # cost from start Node
     start_node.h = get_dist(start, end)     # heuristic estimated cost to end Node
     start_node.f = start_node.g + start_node.h
 
-    end_node = Node(None, None)
+    end_node = Node(None, end)
     end_node.g = 999999       # set a large value if not defined
     end_node.h = 0       # heuristic estimated cost to end Node
     end_node.f = end_node.g + end_node.h
@@ -156,14 +156,16 @@ def search(maze, start, end):
         # Generate children from all adjacent squares
         children = []
 
-        for new_position in current_node:
+        for new_position in move:
 
             # TODO PART 4 Get node position
             # add the position modifier to the current position
-            node_position = [current_node.position[0] + new_position[0], current_node.position[1] + new_position[1]]
+            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
 
             # TODO PART 4 Make sure within range (check if within maze boundary)
-            if(node_position[0] <= no_rows & node_position[0] >= 0 & node_position[1] <= no_columns & node_position[1] >= 0):
+            print(node_position)
+            if(node_position[0] < no_rows and node_position[0] >= 0 and node_position[1] < no_columns and node_position[1] >= 0):
+                print(":D")
                 continue
 
             # Make sure walkable terrain
@@ -181,11 +183,11 @@ def search(maze, start, end):
         for child in children:
 
             # TODO PART 4 Child is on the visited dict (use get method to check if child is in visited dict, if not found then default value is False)
-            if (visited_dict.get(child)):
+            if (visited_dict.get(child.position)):
                 continue
 
             # TODO PART 4 Create the f, g, and h values
-            child.g = child.parent.position +  get_dist(child.position, child.parent.position)
+            child.g = child.parent.g +  get_dist(child.position, child.parent.position)
             # Heuristic costs calculated here, this is using eucledian distance
             child.h = get_dist(child.position, end_node.position)
 
