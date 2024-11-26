@@ -163,7 +163,7 @@ def search(maze, start, end):
             node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
 
             # TODO PART 4 Make sure within range (check if within maze boundary)
-            if(node_position[0] >= no_columns and node_position[0] < 0 and node_position[1] >= no_rows and node_position[1] < 0):
+            if(node_position[0] >= no_rows or node_position[0] < 0 or node_position[1] >= no_columns or node_position[1] < 0):
                 continue
 
             
