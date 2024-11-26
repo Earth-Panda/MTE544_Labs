@@ -139,6 +139,7 @@ def search(maze, start, end):
     """
     # TODO PART 4 find maze has got how many rows and columns
     no_rows, no_columns = maze.shape[0], maze.shape[1]
+    #Q: is maze[0] still the rows? or is it cols bc its transposed at start? why is it transposed at start?
 
     # Loop until you find the end
 
