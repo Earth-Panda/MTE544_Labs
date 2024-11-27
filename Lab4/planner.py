@@ -31,7 +31,7 @@ class planner:
         # TODO PART 5 Create the cost-map, the laser_sig is 
         # the standard deviation for the gausiian for which
         # the mean is located on the occupant grid. 
-        self.m_utilites=mapManipulator(laser_sig=0.5) #increasing this will make the robot avoid obsticles more
+        self.m_utilites=mapManipulator(laser_sig=0.3) #increasing this will make the robot avoid obsticles more
             
         self.costMap=self.m_utilites.make_likelihood_field()
         
@@ -51,7 +51,7 @@ class planner:
         
         Path = list( map(self.m_utilites.cell_2_position, search(self.costMap, startPose, endPose) ) )
 
-
+        
 
         # TODO PART 5 return the path as list of [x,y]
         return Path

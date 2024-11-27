@@ -46,7 +46,7 @@ class decision_maker(Node):
         self.reachThreshold=0.1
 
         # TODO PART 5 your localization type
-        self.localizer=localization(kalmanFilter)
+        self.localizer=localization(rawSensors, loggerHeaders=["odom_x", "odom_y", "odom_th", "timestamp"])
 
 
         
@@ -85,6 +85,7 @@ class decision_maker(Node):
         
         self.goal=self.planner.plan([self.localizer.getPose()[0], self.localizer.getPose()[1]],
                                      [msg.pose.position.x, msg.pose.position.y])
+        
 
     
     def timerCallback(self):
