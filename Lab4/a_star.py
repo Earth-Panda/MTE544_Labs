@@ -168,7 +168,7 @@ def search(maze, start, end):
 
             
             # Make sure walkable terrain
-            if maze[node_position[0], node_position[1]] > 0.8:
+            if maze[node_position[0], node_position[1]] > 0.75:
                 continue
 
             # Create new node
